@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>A Beginner's Guide to The New York Times API</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/stylesheet.css" rel="stylesheet">  
+  </head>
+  <body>
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="page-header">The New York Times API</h1>
+        <div class="lead">A Beginner's Guide</div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+    <p class="lead">
+        Welcome – I’m so glad you could make it. Today we’ll be learning how to integrate 
+        <a href="https://developer.nytimes.com/">The New York Times API</a> into a website. This tutorial 
+        will go over:
+    </p>
+    <br>
+
+    <div class="list-group">
+        <a href="#1" class="list-group-item">What is an API</a>
+        <a href="#2" class="list-group-item">What is JSON</a>
+        <a href="#3" class="list-group-item">The New York Times API</a>
+        <a href="#4" class="list-group-item">Registering for an API key</a>
+        <a href="#5" class="list-group-item">API Console</a>
+        <a href="#6" class="list-group-item">Request Format</a>
+        <a href="#7" class="list-group-item">Response Format</a>
+        <a href="#8" class="list-group-item">Creating a simple news site</a>
+        <a href="#9" class="list-group-item">Top Stories API</a>       
+    </div>
+
+
+    <h2 class="page-header">Before we get started</h2>
+
+    <p>
+    This tutorial assumes you have a basic understanding of computers and the
+    internet, as well as HTML and JavaScript. If not, <a href="http://htmldog.com/">
+    HTML Dog</a> has some great beginner tutorials on both 
+    <a href ="http://htmldog.com/guides/html/">HTML</a> 
+    and <a href="http://htmldog.com/guides/javascript/">Javascript</a>.
+    </p>
+
+    <h2 class="page-header" id="1">What is an API</h2>
+    <p>
+        Humans have a fairly standard social etiquette for communicating with one
+        another. A greeting indicates interest in initiating a conversation, timing
+        and tonality help clarify information requested or provided, and a farewell
+        signifies the end of an interaction.
+    </p>
+    <p>
+        Computers and programs have similar rules for talking to one another. An
+        API, or Application Programming Interface, defines this set of protocols
+        for communication between software components.
+    </p>
+    <p>
+        We will be going over web API’s in particular, which specify the
+        interaction between a client and a server. In general terms, a client is a
+        computer or program requesting resources, while a server “serves” clients
+        by providing said resources.
+    </p>
+    <p>
+        These resources range from simple data to more complex functionality. Its
+        transfer is what creates the connectivity that you likely experience every
+        day through various apps and webpages.
+    </p>
+
+    <h2 class="page-header" id="2">What is JSON</h2>
+    <p>
+        The transferred data is usually structured in either XML (Extensible Markup
+        Language) or JSON (JavaScript Object Notation). We will be using the more
+        popular JSON, which is easier to read and requires less text.
+    </p>
+    <p>
+        It follows the basic format of key-value pairs like this:
+    </p>
+    <p>
+        <pre><code>{ “firstName”: “Isaac”, “lastName”: “Newton” }</code></pre>
+    </p>
+    <p>
+        The entire expression represents an object. The keys “firstName” and
+        “lastName” represent attributes while “Isaac” and “Newton” specify the
+        corresponding values.
+    </p>
+    <p>
+        <h2 class="page-header" id="3">The New York Times API</h2>
+    </p>
+    <p>
+        The New York Times was founded over a century ago and its printed version
+        has the second highest circulation in the US. <a href="https://developer.nytimes.com/">
+        The New York Times API</a> not only provides access to its articles, but 
+        also a wide array of relatedinformation and other insights.
+    </p>
+    <p>
+        It is offered as eleven distinct API categories. We will be focusing on the
+        <a href="https://developer.nytimes.com/article_search_v2.json">Article Search API</a>, 
+        which provides database access to one of the most
+        reliable source of news articles dating back to 1851.
+    </p>
+    <p>
+        <h2 class="page-header" id="4">Registering for an API Key</h2>
+    </p>
+    <p>
+        Many API’s require keys to make requests which identify the origin and
+        ensure its services aren’t being abused.
+    </p>
+    <p>
+        Anyone can register for a New York Times API key by <a href="https://developer.nytimes.com/signup"
+        >signing up</a>. 
+
+    </p>
+    <img class="thumbnail" src="img/signup.png">
+    <p>
+        You should receive an email soon
+        after with your key, which is similar to a username and password and should
+        not by shared with anyone.
+    </p>
+    <p>
+        Most API’s have a limit to prevent abuse and the Article Search API by
+        default is limited to 1000 calls/day, and 1 call/second.
+    </p>
+    <p>
+        <h2 class="page-header" id="5">API Console</h2>
+    </p>
+    <p>
+        Now that you have your very own API key, we can finally get to the fun part
+        – making requests. To help us quickly get a sense of its functionality, The
+        New York Times API has provided us with a <a href="https://developer.nytimes.com/article_search_v2.json#/Console/GET/articlesearch.json">
+        console</a> for easily testing out
+        various requests and viewing responses. We’ll use this to quickly test
+        things before integrating into a webpage.
+    </p>
+    <img class="thumbnail" src="img/console.png">
+    <p>
+        First, copy and paste your newly acquired API key into the “apikey” field.
+        As mentioned, The New York Times API requires the use of a key for every
+        request. You should now see the response on the right-hand side showing a
+        list of the latest articles. The format should look familiar – it’s in JSON
+        as we talked about earlier.
+    </p>
+    <p>
+        Now let’s go over all the optional parameters specific to the Article
+        Search API – these tell the server exactly what information we are
+        requesting.
+    </p>
+    <dl class="dl-horizontal">
+    <dt>q</dt>
+    <dd>Search query term</dd>
+
+    <dt>fq</dt>
+    <dd>Filtered search query – allows us to narrow our search using a wide
+        array of criteria such as source and subject.</dd>
+
+    <dt>begin_date</dt>
+    <dd>Filters by publication starting on or after specified date in
+        YYYYMMDD format.</dd>
+
+    <dt>end_date</dt>
+    <dd>Filters by publication ending on or before specified date in
+        YYYYMMDD format.</dd>
+        
+    <dt>sort</dt>
+    <dd>Sorts by date. Possible values are newest and oldest.</dd>
+
+    <dt>fl</dt>
+    <dd>Only return specified fields.</dd>
+
+    <dt>hl</dt>
+    <dd>Highlights the search term if set to true.</dd>
+
+    <dt>page</dt>
+    <dd>Specifies which page of results - 10 results are returned per
+        response.</dd>
+
+    <dt>facet_field</dt>
+    <dd>Returns a count of the top five terms specified by the query.</dd>
+
+    <dt>facet_filter</dt>
+    <dd>By default, the facet counts ignore filters. Setting to true
+        limits the counts according to the specified filters.</dd>
+    
+    </dl>
+    <p>
+        Try playing around with different values. The response on the right should
+        be fairly straight forward. If you get a status code above 400, there
+        should be an error message in the response telling you exactly what went
+        wrong.
+    </p>
+    <p>
+        And that’s basically it. Well, almost.
+    </p>
+    <p>
+        We don’t want to be limited to using the console to make requests. The
+        beauty of an API is that it allows us to integrate its functionality into
+        our own webpages and apps.
+    </p>
+    <p>
+        <h2 class="page-header" id="6">Request Format</h2>
+    </p>
+    <p>
+        The console was fun, but we can’t rely on it to build a webpage or app.
+        Fortunately, everything that can be done with the console can be done
+        without it. Let’s build a sample request both with and without the console.
+    </p>
+    <p>
+        There are many request methods, with GET being the most common and is
+        generally used when simply requesting resources. As shown in the API
+        documentation, the Article Search API also uses a GET method.
+    </p>
+    <a href ="http://developer.nytimes.com/article_search_v2.json"><img class="thumbnail" src="img/get.png"></a>
+    <p>
+        Each GET request is sent to an endpoint, which specifies the location to
+        access resources via the API. Appended to the endpoint is our query string.
+        It begins with a <code>?</code>, and is composed of the API key and parameters which
+        tell the server what information we are looking for. Like JSON, it is
+        formatted in key value pairs, each separated by a <code>&amp;</code>.
+    </p>
+    <p>
+        Putting everything together – here’s what a typical GET request looks like:
+    </p>
+    <p>
+        <pre><code>endpoint?api-key=your-api-key&amp;key-1=value-1&amp;key-2=value-2&amp;key-n=value-n</code></pre>
+    </p>
+    <p>
+        Back to our example. Here are the parameters we’ll be using:
+    </p>
+    <img class="thumbnail" src="img/parameters.png"> 
+    <p>
+        If you scroll up to Sample Code, you’ll see the exact same parameters. The
+        URL is the endpoint.
+    </p>
+    <p>
+        Let’s convert what we’ve inputted in the console into a standard GET
+        request:
+    </p>
+ 
+    <pre><code>https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=0b8bb4e0f6ef4e6cb68cc6c1274e2c83&amp;q=elon%20musk&amp;begin_date=20170401&amp;end_date=20170430&amp;sort=newest&amp;hl=true&amp;page=3&amp;facet_field=source&amp;facet_filter=true</code></pre>
+
+    <p>
+        It might look long and confusing at first glance, but if you carefully look
+        for the endpoint and parameters, it’s actually very straightforward. You
+        may have noticed that the space between elon and musk has been replaced
+        with <code>%20</code>. This is in accordance with percent-encoding, which replaces
+        special characters with <code>%</code> followed by its ASCII value.
+    </p>
+    <p>
+        <h2 class="page-header" id="7">Response Format</h2>
+    </p>
+    <p>
+        The response you should see within the console should look like this:
+    </p>
+    <img class="thumbnail" src="img/response.png"> 
+    <p>
+        As you can see from the scrollbar length, the response is rather long. And
+        even though it’s fairly well formatted, it’s still a little difficult to
+        see the bigger picture and make sense of what’s going on. We can do better.
+    </p>
+    <p>
+        Now let’s try sending our previous GET request by pasting it in the browser
+        as you would a normal web address. You should see something like this in
+        response:
+    </p>
+    <img class="thumbnail" src="img/unformatted.png"> 
+    <p>
+        What’s that? You can’t read the response like Neo decoding the Matrix?
+        That’s understandable – turns out the console automatically formatted the
+        response which is why everything looked so neat before. Fortunately,
+        there’s a plethora of JSON formatters online that makes interpreting a much
+        more pleasant experience.
+    </p>
+    <p>
+        If you don’t have a favorite, I quite like one called <a href="http://www.jsoneditoronline.org/">
+        JSON Editor Online</a>.
+    </p>
+    <p>
+        Copy the response text and paste it in the left hand side and click the
+        convert button. You should see this:
+    </p>
+    <img class="thumbnail" src="img/formatted.png"> 
+    <p>
+        Much better. Now we can clearly see that we received an object with 3
+        properties – <code>response</code>, <code>status</code>, and <code>copyright</code>. Like a folder directory, we
+        can further expand the properties. <code>response</code> opens up to <code>meta</code>, <code>docs</code>, and
+        <code>facets</code>.
+    </p>
+    <p>
+        <code>meta</code> contains some useful meta information. In particular, <code>hits</code> displays
+        the number of articles fitting our criteria, and <code>offset</code> indicates how many
+        results are before the current page.
+    </p>
+    <p>
+        In <code>facets</code> we see that all these articles came from three sources – The New
+        York Times, Reuters, and AP.
+    </p>
+    <p>
+        From the brackets, we can tell that <code>docs</code> is an array containing the ten
+        results on the current page. Let’s expand the first result:
+    </p>
+    <img class="thumbnail" src="img/first_doc.png"> 
+    <p>
+        There’s a lot of useful information here – let’s go over just a few. Let’s
+        start with the <code>web_url</code> – pasting it in the browser actually takes us to the
+        original article. The <code>snippet</code> contains our query term “elon musk” that has
+        been bolded since we set <code>hl</code> to <code>true</code>. We see that <code>multimedia</code> 
+        is also an array containing the source of three images:
+    </p>
+    <img class="thumbnail" src="img/multimedia.png"> 
+    <p>
+        Appending the addresses to <code>http://www.nytimes.com/</code> takes us to
+        those images – here’s the second one:
+    </p>
+    <img class="thumbnail" src="img/image.png"> 
+    <p>
+        Looks like we have all we need to make a simple news site.
+    </p>
+    <p>
+        <h2 class="page-header" id="8">Creating a simple news site</h2>
+    </p>
+    <p>
+        The goal is finally in sight – we have learned everything necessary to
+        utilize an API to quickly create websites with powerful functionality. We know
+        the format of the request and response, now we just need to figure out how
+        to use JavaScript to do so dynamically.
+    </p>
+    <p>
+        Before we start, let’s think about what features our website should
+        include.
+    </p>
+    <p>
+        For our example, let’s allow the user to select the following parameters:
+    </p>
+    <ul>
+        <li>
+            Search query term
+        </li>
+        <li>
+            Begin date
+        </li>
+        <li>
+            End date
+        </li>
+        <li>
+            Sort
+        </li>
+    </ul>
+    <p>
+        In addition, we’ll also include buttons for moving between pages.
+    </p>
+    <p>
+        As for output to the webpage, let’s include the following:
+    </p>
+    <ul>
+        <li>
+            Web URL
+        </li>
+        <li>
+            Headline
+        </li>
+        <li>
+            Snippet
+        </li>
+        <li>
+            Publication date
+        </li>
+        <li>
+            Images
+        </li>
+    </ul>
+
+    <iframe width="100%" height="300" src="https://jsfiddle.net/Hapachino/ekaeth0m/5/embedded/js/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+    <p>
+        First we create an instance of an <code>XMLHttpRequest</code> object, which
+        allows us to send and receive data with a server – The New York Times API
+        in this case.
+    </p>
+    <p>
+        The <code>encodeURIComponent</code> helps encode our search term in case of
+        spaces and other reserved characters. 
+    </p>
+    <p>
+        We initialize our request with the <code>open</code> method. The first
+        argument is <code>GET</code> since that is the request method we’ll be
+        using. Next is the URL we concatenated with the endpoint and parameters. We
+        set the last to <code>true</code> to indicate we’ll be making an
+        asynchronous request, meaning the program will continue executing while
+        waiting for a response.
+    </p>
+    <p>
+        Finally we <code>send</code> out our request and pass <code>null</code>
+        since we don’t need to send any other information in the request body.
+    </p>
+    <p>
+        It’s a good start but we can’t expect users to interact with the JavaScript
+        directly. Let’s build a form in html where they can select the parameter
+        values.
+    </p>
+
+    <iframe width="100%" height="300" src="https://jsfiddle.net/Hapachino/xduxrkew/11/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+    <p>
+        Not bad – the form may not look perfect but we could fix that with a more
+        sophisticated stylesheet later on. More importantly, this simple form gives
+        users the ability to define parameters and send an actual request.
+    </p>
+    <p>
+        In addition to creating a form, we also added some additional
+        functionality. We placed our previous JavaScript snippet within
+        <code>bindButtons</code>, which is called after the HTML loads and adds an
+        event listener to the <code>submit</code> button. When <code>submit</code>
+        is clicked, it takes the field values and builds the query string just like
+        before.
+    </p>
+    <p>
+        We also added an event listener to the <code>XMLHttpRequest</code> object
+        itself. This allows other code to continue executing while waiting for a
+        response. When the response has loaded, we also added some error handling
+        depending on the <code>status</code>.
+    </p>
+    <p>
+        Let’s give it a try.
+    </p>
+
+    <img class="thumbnail" src="img/form-response.png">
+
+    <p>
+        It works – but we’re back to the unformatted output like before. There’s a
+        lot of information, so let’s decide what we’re interested in displaying.
+    </p>
+    <p>
+        Let’s include the following:
+    </p>
+    <ul>
+        <li>
+            Web URL
+        </li>
+        <li>
+            Headline
+        </li>
+        <li>
+            Snippet
+        </li>
+        <li>
+            Publication date
+        </li>
+        <li>
+            Images
+        </li>
+    </ul>
+
+<iframe width="100%" height="300" src="https://jsfiddle.net/Hapachino/xjcprehn/2/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+    <p>
+        And the results:
+    </p>
+
+    <img class="thumbnail" src="img/form-formatted.png">
+
+    <p>
+        Looking good! The headlines also serve as links to the original article. With some 
+        nicer formatting, this could almost pass as a real content site! 
+    </p>
+
+    <a class="btn btn-primary btn-lg btn-block href="articleAPI.html" target="_blank">Try It!</a>
+ 
+    <h2 class="page-header" id="9">Top Stories API</h2>
+
+    <p>
+        Let’s try one of the other New York Time API’s – the 
+        <a href="https://developer.nytimes.com/top_stories_v2.json#">Top Stories API</a>
+    </p>
+    <p>
+        We follow the same steps as before and start with examining the
+        <a href="https://developer.nytimes.com/top_stories_v2.json#/README">documentation</a>
+    </p>
+    <p>
+        We only have three parameters this time - <code>section</code>,
+        <code>response-format</code>, and <code>api-key</code>. One thing to note is
+        that the first two parameters are part of the endpoint, rather than the
+        query string like before.
+    </p>
+    <p>
+        Once again, let’s examine a sample response format with our JSON formatter.
+    </p>
+    <p>
+        <img class="thumbnail" src="img/formatted-top-stories.png">
+    </p>
+    <p>
+        It looks pretty similar to before. Once again we have an object with some
+        meta information and a <code>results</code> array containing,
+        unsurprisingly, the results. Let’s expand the first one to see what
+        information we are interested in extracting and how to do so.
+    </p>
+    <p>
+        <img class="thumbnail" src="img/first-top-stories.png">
+    </p>
+    <p>
+        Great – now we can easily modify our previous code to work with the new
+        API by revising the request and how we interpret the response.
+    </p>
+
+    <iframe width="100%" height="300" src="https://jsfiddle.net/Hapachino/g8zqgtbz/1/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+    <img class="thumbnail" src="img/top-stories-result.png">
+
+    <a class="btn btn-primary btn-lg btn-block" href="topStoriesAPI.html" target="_blank">Try It!</a>
+
+    <h2 class="page-header">The End</h2>
+    <p>
+        And that’s it. I hope you now have a greater appreciation for API’s and how
+        to utilize them to quickly create useful websites. There are thousands of
+        API’s out there ranging from image recognition to Pokémon and I’m sure
+        you’ll find something that interests you. So get out there and explore!
+    </p>
+    <br><br><br><br>
+
+    </div>
+
+    </body>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
+
+
+
+
+
